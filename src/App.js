@@ -2,23 +2,37 @@ import React from 'react';
 import { CssBaseline } from '@mui/material';
 import { Route, Switch } from 'react-router-dom';
 
+import useStyles from './components/styles';
+
+import {
+  Actors,
+  Movies,
+  MovieInformation,
+  Navbar,
+  Profile,
+} from './components/index';
+
 function App() {
+  const classes = useStyles();
+
   return (
-    <div>
+    <div className={classes.root}>
       <CssBaseline />
-      <main>
+      <Navbar />
+      <main className={classes.content}>
+        <div className={classes.toolbar} />
         <Switch>
           <Route path="/actors/:id" exact>
-            <h1>Actors</h1>
+            <Actors />{' '}
           </Route>
           <Route path="/movies/:id" exact>
-            <h1>Movies Information</h1>
+            <MovieInformation />
           </Route>
           <Route path="/" exact>
-            <h1>Movies</h1>
+            <Movies />
           </Route>
           <Route path="/profile/:id" exact>
-            <h1>Profile</h1>
+            <Profile />
           </Route>
         </Switch>
       </main>
