@@ -17,11 +17,17 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 
+import { useGetGenresQuery } from '../../services/TMBD';
+import genreIcons from '../../assets/genres';
+
 export default function Sidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const classes = useStyles();
   const isMobile = useMediaQuery('max-width:600px');
+
+  const { data, isFetching } = useGetGenresQuery();
+
   const redLogo =
     'https://w7.pngwing.com/pngs/280/326/png-transparent-logo-netflix-logos-and-brands-icon-thumbnail.png';
   const blueLogo =
@@ -59,7 +65,7 @@ export default function Sidebar() {
             <ListItemButton onClick={() => {}}>
               <ListItemIcon>
                 <img
-                  src={redLogo}
+                  src={genreIcons[label.toLowerCase()]}
                   className={classes.genreImages}
                   height={30}
                   alt="listItem"
@@ -73,21 +79,28 @@ export default function Sidebar() {
       <Divider />
       <List>
         <ListSubheader>Genres</ListSubheader>
-        {demoCategories.map(({ label, value }) => (
-          <Link key={value} className={classes.links} to="/">
-            <ListItemButton onClick={() => {}}>
-              <ListItemIcon>
-                <img
-                  src={redLogo}
-                  className={classes.genreImages}
-                  height={30}
-                  alt="listItem"
-                />
-              </ListItemIcon>
-              <ListItemText primary={label} />
-            </ListItemButton>
-          </Link>
-        ))}
+
+        {isFetching ? (
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        ) : (
+          data.genres.map(({ name, id }) => (
+            <Link key={name} className={classes.links} to="/">
+              <ListItemButton onClick={() => {}}>
+                <ListItemIcon>
+                  <img
+                    src={genreIcons[name.toLowerCase()]}
+                    className={classes.genreImages}
+                    height={30}
+                    alt="listItem"
+                  />
+                </ListItemIcon>
+                <ListItemText primary={name} />
+              </ListItemButton>
+            </Link>
+          ))
+        )}
       </List>
     </div>
   );
